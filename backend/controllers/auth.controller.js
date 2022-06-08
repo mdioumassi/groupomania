@@ -12,7 +12,7 @@ module.exports.signUp = async (req, res, next) => {
     db.query(sql, [pseudo, email, cryptedPassword], (err, result) => {
         if (err) {
             console.log(err);
-            res.status(400).json({message: 'EMAIL_EXISTS11', errorPassword: ''});
+            res.status(400).json({message: 'EMAIL_EXISTS', errorPassword: ''});
         } else if (!validator.isEmail(email)) {
             const sql = `DELETE
                          FROM users

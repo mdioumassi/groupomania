@@ -49,7 +49,7 @@ export default {
       this.signup({pseudo: this.pseudo, email: this.email, password: this.password}).catch(error => {
         this.error = error;
       });
-      this.$router.push('/login');
+     // this.$router.push('/login');
     }
   }
 }
