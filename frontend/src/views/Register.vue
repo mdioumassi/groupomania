@@ -1,7 +1,11 @@
 <template>
   <div class="container">
+    <h1>Inscription</h1>
     <div class="alert alert-danger" v-if="error">{{error}}</div>
     <form @submit.prevent="onSignup()">
+      <div class="imgcontainer">
+        <img src="../assets/img/icon.png" alt="Avatar" class="avatar">
+      </div>
       <label for="pseudo"><b>Pseudo</b></label>
       <input v-model.trim="pseudo" type="text" placeholder="Pseudo" name="pseudo" id="pseudo">
 
@@ -13,7 +17,7 @@
       <input v-model.trim="password" type="password" placeholder="Enter Password" name="password" id="password">
       <div class="error" v-if="errors.password">{{ errors.password }}</div>
       <hr>
-      <button type="submit" class="registerbtn">Register</button>
+      <button type="submit" class="registerbtn w3-pale-red">Valider</button>
     </form>
   </div>
 </template>

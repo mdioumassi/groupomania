@@ -5,7 +5,7 @@
       <div>
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item" v-if="isAuth">
-            <span>{{pseudo}}</span>
+            <span class="w3-red">Hello {{pseudo}} !</span>
           </li>
           <li class="nav-item" v-if="!isAuth">
             <router-link to="/register" class="nav-link">Inscription</router-link>
@@ -14,7 +14,7 @@
             <router-link to="/login" class="nav-link">Connexion</router-link>
           </li>
           <li class="nav-item" v-if="isAuth">
-            <a href="#" class="nav-link" @click.prevent="onLogout">Déconnexion</a>
+            <a href="#" class="nav-link" @click.prevent="onLogout">Se déconnecter</a>
           </li>
         </ul>
       </div>

@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <h1>Login {{ pseudo }}</h1>
+    <h1>Connexion {{ pseudo }}</h1>
     <div class="alert alert-danger" v-if="error">{{error}}</div>
     <form @submit.prevent="onLogin()">
       <div class="imgcontainer">
-        <img src="../assets/img/img_avatar2.png" alt="Avatar" class="avatar">
+        <img src="../assets/img/icon.png" alt="Avatar" class="avatar">
       </div>
 
       <label for="email"><b>Email</b></label>
@@ -13,10 +13,7 @@
       <label for="password"><b>Password</b></label>
       <input v-model.trim="password" type="password" placeholder="Enter Password" name="password">
       <div class="error" v-if="errors.password">{{errors.password}}</div>
-      <button type="submit">Login</button>
-      <label>
-        <input type="checkbox" checked="checked" name="remember"> Remember me
-      </label>
+      <button type="submit" class="w3-pale-red">Connexion</button>
     </form>
   </div>
 </template>
