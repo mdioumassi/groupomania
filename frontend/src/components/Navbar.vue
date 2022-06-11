@@ -1,14 +1,20 @@
 <template>
-  <nav class="navbar navbar-expand-md navbar-dark  mb-4 w3-pale-red">
+  <nav class="navbar navbar-expand-md navbar-dark  mb-4 w3-black">
     <div class="container-fluid">
       <router-link to="/" class="navbar-brand">Groupomania</router-link>
       <div>
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
-          <li class="nav-item">
+          <li class="nav-item" v-if="isAuth">
+            <span>{{pseudo}}</span>
+          </li>
+          <li class="nav-item" v-if="!isAuth">
             <router-link to="/register" class="nav-link">Inscription</router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="!isAuth">
             <router-link to="/login" class="nav-link">Connexion</router-link>
+          </li>
+          <li class="nav-item" v-if="isAuth">
+            <a href="#" class="nav-link" @click.prevent="onLogout">Déconnexion</a>
           </li>
         </ul>
       </div>
@@ -18,9 +24,8 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import {IS_USER_AUTHENTICATE_GETTER, LOGOUT_ACTION} from "@/store/storeconstants";
-import axios from "axios";
-// import axios from "axios";
+import {IS_USER_AUTHENTICATE_GETTER, LOGOUT_ACTION, PSEUDO_GETTER} from "@/store/storeconstants";
+
 
 
 
@@ -30,6 +35,9 @@ export default {
   computed: {
     ...mapGetters('auth', {
       isAuth: IS_USER_AUTHENTICATE_GETTER
+    }),
+    ...mapGetters('auth', {
+      pseudo: PSEUDO_GETTER
     }),
     // ...mapState('auth', {
     //     pseudo: (state) => state.pseudo
@@ -41,16 +49,18 @@ export default {
     }),
 
     async onLogout() {
-      const removeCookie = (key) => {
-        if (window !== undefined) {
-          this.$cookies.remove(key, {expires: 1});
-        }
-      };
-      // this.logout();
-        await axios.get(`http://localhost:5000/api/auth/logout`, {withCredentials: true})
-            .then(() => removeCookie('jwt'))
-            .catch((err) => console.log(err));
-            //this.$router.replace('/login');
+      // const removeCookie = (key) => {
+      //   if (window !== undefined) {
+      //     this.$cookies.remove(key, {expires: 1});
+      //   }
+      // };
+      this.logout();
+      //   let response = await axios.get(`http://localhost:5000/api/auth/logout`, {withCredentials: true});
+      //   console.log(response);
+            // .then(
+            //     (response) => console.log(jwt))
+            // .catch((err) => console.log(err));
+            // this.$router.replace('/login');
       }
     }
 }

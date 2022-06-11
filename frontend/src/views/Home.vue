@@ -28,20 +28,17 @@
 <script>
 
 import axios from "axios";
-import { PSEUDO_GETTER} from "@/store/storeconstants";
+import {PSEUDO_GETTER} from "@/store/storeconstants";
 import {mapGetters} from "vuex";
-
-// import { useCookies } from "vue3-cookies";
-// const { cookies } = useCookies();
-
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Home",
-  // data() {
-  //   return {
-  //    'pseudo': this.pseudo
-  //   }
-  // },
+  data() {
+    return {
+      errors: [],
+      error: ''
+    }
+  },
   computed: {
     ...mapGetters('auth', {
       pseudo: PSEUDO_GETTER
@@ -52,7 +49,6 @@ export default {
         .then((response) => {
           console.log(response);
         });
-    // console.log(res.data);
   }
 }
 </script>

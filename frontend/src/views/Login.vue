@@ -22,16 +22,16 @@
 </template>
 
 <script>
-import {mapActions, mapState} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import SignupValidations from "@/services/SignupValidations";
-import {LOGIN_ACTION} from "@/store/storeconstants";
+import {LOGIN_ACTION, PSEUDO_GETTER} from "@/store/storeconstants";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Login',
   computed: {
-    ...mapState('auth', {
-      pseudo: (state) => state.name,
+    ...mapGetters('auth', {
+      pseudo: PSEUDO_GETTER
     }),
   },
   data() {
@@ -54,11 +54,11 @@ export default {
         return false;
       }
       try {
-        await this.login({email: this.email, password: this.password});
+         await this.login({email: this.email, password: this.password});
       } catch (e) {
         this.error = e;
       }
-      await this.$router.push('/');
+     await this.$router.push('/');
     }
   },
 }

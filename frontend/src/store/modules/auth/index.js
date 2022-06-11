@@ -6,8 +6,9 @@ export default {
     namespaced: true,
     state() {
         return {
+            id: '',
             token: '',
-            pseudo: 'Mohamed',
+            pseudo: '',
             email: '',
             password: '',
         };

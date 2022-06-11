@@ -3,21 +3,14 @@ import axios from "axios";
 import SignupValidations from "@/services/SignupValidations";
 
 export default {
-     async [LOGOUT_ACTION]() {
-         // const removeCookie = (key) => {
-         //   if (window !== undefined) {
-         //     this.$cookies.remove(key, {expires: 1});
-         //   }
-         // };
-         // try {
-         //     let response;
-         //     response = await axios.get(`http://localhost:5000/api/auth/logout`, {withCredentials: true})
-         //         // .then(() => removeCookie('jwt'))
-         //     console.log(response);
-         // } catch (err) {
-         //     console.log(err)
-         // }
-
+     async [LOGOUT_ACTION](context){
+         let response = '';
+         response = await axios.get(`http://localhost:5000/api/auth/logout`, {withCredentials: true})
+         if (response.statusText === 'OK') {
+             context.commit(SET_USER_TOKEN_DATA_MUTATION, {
+                 token: ''
+             })
+         }
     },
     async [LOGIN_ACTION](context, payload) {
         let postData = {
@@ -30,7 +23,7 @@ export default {
         } catch (err) {
             throw SignupValidations.getErrorMessageFromCode(err.response.data.message);
         }
-        if (response.status === '200') {
+        if (response.statusText === 'OK') {
             context.commit(SET_USER_TOKEN_DATA_MUTATION, {
                 pseudo: response.data.pseudo,
                 email: response.data.email,
@@ -51,13 +44,11 @@ export default {
             throw SignupValidations.getErrorMessageFromCode(err.response.data.message);
         }
 
-        if (response.status === '200') {
+        if (response.status === 'OK') {
             context.commit(SET_USER_TOKEN_DATA_MUTATION, {
                 email: response.data.email,
                 pseudo: response.data.pseudo
             })
         }
     }
-
-
 };

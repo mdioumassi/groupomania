@@ -6,7 +6,7 @@ export default {
     },
 
     [IS_USER_AUTHENTICATE_GETTER]: (state) => {
-        return !state.token;
+        return state.token;
     },
 
     [PSEUDO_GETTER]: (state) => {
