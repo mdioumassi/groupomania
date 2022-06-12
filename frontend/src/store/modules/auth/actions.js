@@ -1,4 +1,9 @@
-import {LOGIN_ACTION, LOGOUT_ACTION, SET_USER_TOKEN_DATA_MUTATION, SIGNUP_ACTION} from "@/store/storeconstants";
+import {
+    LOGIN_ACTION,
+    LOGOUT_ACTION,
+    SET_USER_TOKEN_DATA_MUTATION,
+    SIGNUP_ACTION
+} from "@/store/storeconstants";
 import axios from "axios";
 import SignupValidations from "@/services/SignupValidations";
 
@@ -25,6 +30,7 @@ export default {
         }
         if (response.statusText === 'OK') {
             context.commit(SET_USER_TOKEN_DATA_MUTATION, {
+                id: response.data.id,
                 pseudo: response.data.pseudo,
                 email: response.data.email,
                 token: response.data.token
@@ -32,14 +38,14 @@ export default {
         }
     },
     async [SIGNUP_ACTION](context, payload) {
-        let postData = {
+        let userData = {
             pseudo: payload.pseudo,
             email: payload.email,
             password: payload.password
         };
         let response = '';
         try {
-             response = await axios.post(`http://localhost:5000/api/auth/register`, postData, {withCredentials: true});
+             response = await axios.post(`http://localhost:5000/api/auth/register`, userData, {withCredentials: true});
         } catch (err) {
             throw SignupValidations.getErrorMessageFromCode(err.response.data.message);
         }

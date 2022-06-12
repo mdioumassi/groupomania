@@ -1,4 +1,9 @@
-import {GET_USER_TOKEN_GETTER, IS_USER_AUTHENTICATE_GETTER, PSEUDO_GETTER} from "@/store/storeconstants";
+import {
+    GET_USER_TOKEN_GETTER,
+    ID_USER_GETTER,
+    IS_USER_AUTHENTICATE_GETTER,
+    PSEUDO_GETTER
+} from "@/store/storeconstants";
 
 export default {
     [GET_USER_TOKEN_GETTER]: (state) => {
@@ -11,5 +16,9 @@ export default {
 
     [PSEUDO_GETTER]: (state) => {
         return state.pseudo;
+    },
+
+    [ID_USER_GETTER]: (state) => {
+        return state.id;
     }
 };

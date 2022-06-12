@@ -1,15 +1,37 @@
 <template>
   <!--  <div class="container">-->
   <!--    {{ message }}-->
+  <div  v-if="isAuth">
   <div class="post-container">
     <a class="user-info" href="/profil" v-if="pseudo">
       <i class='fas fa-user-alt' style='font-size:48px;color:red'></i>
       <p>{{ pseudo }}</p></a>
-    <form @submit.prevent="onPost()">
-         <textarea v-model.trim="message" class="form-control" name='message' id='message' placeholder='Quoi de neuf ?'></textarea>
-<!--        <input v-model.trim="media" type="file" id="file-upload" name="media" accept=".jpg, .jpeg, .png">-->
+    <form @submit.prevent="onPost()" class="form-post-msg">
+      <textarea v-model.trim="message" class="form-control" rows="3" name='message' id='message'
+                placeholder='Quoi de neuf ?'></textarea>
+      <input type="file" id="file-upload" name="image" accept=".jpg, .jpeg, .png">
       <button type="submit">Envoyer</button>
     </form>
+  </div>
+  <div class="w3-container" v-for="data in postData" :key="data.id">
+    <div class="w3-card-4 w3-panel w3-border w3-round-xlarge" style="width:100%;">
+      <header class="w3-container">
+        <div class="row">
+          <div class="col-sm-3"><i class='fas fa-user-alt'></i>{{ pseudo }}</div>
+          <div class="col-sm-6"></div>
+          <div class="col-sm-3">{{data.date}}</div>
+        </div>
+      </header>
+
+      <div class="w3-container">
+        <p>{{data.message}}</p>
+      </div>
+
+      <footer class="w3-container">
+        <h5>Footer</h5>
+      </footer>
+    </div>
+  </div>
   </div>
   <!--  </div>-->
 </template>
@@ -17,41 +39,57 @@
 <script>
 
 import axios from "axios";
-import {PSEUDO_GETTER} from "@/store/storeconstants";
-import {mapGetters} from "vuex";
+import {ID_USER_GETTER, IS_USER_AUTHENTICATE_GETTER, POST_MSG_ACTION, PSEUDO_GETTER} from "@/store/storeconstants";
+import {mapActions, mapGetters} from "vuex";
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Home",
   data() {
     return {
-      'message': '',
-      'file': ''
+      message: '',
+      file: '',
+      date: new Date().toLocaleDateString('en-CA'),
+      image: '',
+      video: 'https://www.youtube.com/watch?v=YxZMYcHsoCQ',
+      postData: [],
     }
   },
   computed: {
     ...mapGetters('auth', {
-      pseudo: PSEUDO_GETTER
-    })
+      isAuth: IS_USER_AUTHENTICATE_GETTER,
+      pseudo: PSEUDO_GETTER,
+      idUser: ID_USER_GETTER,
+    }),
   },
   mounted() {
     axios.get('http://localhost:5000/api/post', {withCredentials: true})
         .then((response) => {
-          console.log(response);
+         this.postData = response.data;
         });
   },
   methods: {
-    onPost() {
-
+    ...mapActions('post', {post: POST_MSG_ACTION}),
+    async onPost() {
+      try {
+        await this.post({
+          poster_id: this.idUser,
+          message: this.message,
+          image: this.image,
+          video: this.video,
+          date: this.date
+        });
+      } catch (e) {
+        this.error = e;
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-.container {
-  margin-left: auto;
-  margin-right: auto;
-  width: 1000px;
+.form-post-msg {
+  width: 50rem;
 }
 
 .post-container {

@@ -34,14 +34,9 @@ export default {
   name: "Navbar",
   computed: {
     ...mapGetters('auth', {
-      isAuth: IS_USER_AUTHENTICATE_GETTER
-    }),
-    ...mapGetters('auth', {
+      isAuth: IS_USER_AUTHENTICATE_GETTER,
       pseudo: PSEUDO_GETTER
-    }),
-    // ...mapState('auth', {
-    //     pseudo: (state) => state.pseudo
-    // }),
+    })
   },
   methods: {
     ...mapActions('auth', {
