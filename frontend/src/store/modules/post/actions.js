@@ -9,10 +9,11 @@ export default {
         let postData = {
             poster_id: payload.poster_id,
             message: payload.message,
-            image: payload.image,
             video: payload.video,
-            date: payload.date
+            date: payload.date,
+            image: payload.file
         };
+        console.log(postData);
         let response = '';
         try {
             response = await axios.post(`http://localhost:5000/api/post`, postData, {withCredentials: true});
