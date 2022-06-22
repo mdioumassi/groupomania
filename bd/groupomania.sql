@@ -58,8 +58,7 @@ CREATE TABLE `posts` (
   `id` int(11) NOT NULL,
   `poster_id` int(11) NOT NULL,
   `message` varchar(1000) NOT NULL,
-  `image` varchar(255) NOT NULL DEFAULT 'No img',
-  `video` varchar(255) NOT NULL DEFAULT 'No video',
+  `url_image` varchar(255) NOT NULL DEFAULT 'No img',
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

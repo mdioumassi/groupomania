@@ -2,7 +2,7 @@ const db = require('../config/database').getDB();
 const fs = require('fs');
 
 module.exports.readPost = (req, res, next) => {
-    const sql = `SELECT * FROM posts`;
+    const sql = `SELECT * FROM posts ORDER BY date desc `;
     db.query(sql, (err, result) => {
         if (err) {
             res.status(400).json({err});
@@ -17,38 +17,23 @@ module.exports.createPost = (req, res, next) => {
     const post = {
         poster_id: req.body.poster_id,
         message: req.body.message,
-        image: "No img",
-        video: req.body.video,
+        url_image: req.body.url_image,
         date: req.body.date
     }
-    if (req.file) {
-        post.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-        const sql = `INSERT INTO posts (poster_id, message, image, video, date) VALUES (?, ?, ?, ?, ?)`;
-        db.query(sql, [post.poster_id, post.message, post.image, post.video, post.date], (err, result) => {
-            if (err) {
-                res.status(400).json({err});
-            }
-            else {
-                res.status(201).json(result);
-            }
-        });
-    }
-    else {
-        const sql = `INSERT INTO posts (poster_id, message, image, video, date) VALUES (?, ?, ?, ?, ?)`;
-        db.query(sql, [post.poster_id, post.message, post.image, post.video, post.date], (err, result) => {
-            if (err) {
-                res.status(400).json({err});
-            }
-            else {
-                res.status(201).json(result);
-            }
-        });
-    }
+    const sql = `INSERT INTO posts (poster_id, message, url_image, date) VALUES (?, ?, ?, ?)`;
+    db.query(sql, [post.poster_id, post.message, post.url_image, post.date], (err, result) => {
+        if (err) {
+            res.status(400).json({err});
+        }
+        else {
+            res.status(201).json(result);
+        }
+    });
+
 }
 
 module.exports.updatePost = (req, res, next) => {
     const messageUpdated = req.body.message;
-    const videoUpdated = req.body.video;
     const id = req.params.id;
     if (req.file) {
         const imageUpdated = `${req.protocol}.//${req.get('host')}/images/${req.file.filename}`;
@@ -64,7 +49,7 @@ module.exports.updatePost = (req, res, next) => {
     }
     else {
         const sql = `UPDATE posts SET message=?, video=? WHERE id=?`;
-        db.query(sql, [messageUpdated, videoUpdated, id], (err, result) => {
+        db.query(sql, [messageUpdated, id], (err, result) => {
             if (err) {
                 console.log(err);
                 res.status(400).json({err});
