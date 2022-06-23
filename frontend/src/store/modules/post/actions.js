@@ -9,9 +9,8 @@ export default {
         let postData = {
             poster_id: payload.poster_id,
             message: payload.message,
-            video: payload.video,
-            date: payload.date,
-            image: payload.file
+            date: payload.timestamp,
+            url_image: payload.url_image
         };
         console.log(postData);
         let response = '';

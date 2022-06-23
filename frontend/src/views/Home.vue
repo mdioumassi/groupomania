@@ -9,7 +9,7 @@
     <form @submit.prevent="onPost()" class="form-post-msg">
       <textarea v-model.trim="message" class="form-control" rows="3" name='message' id='message'
                 placeholder='Quoi de neuf ?'></textarea>
-      <input type="file" id="file-upload" name="file" accept=".jpg, .jpeg, .png">
+      <input v-model.trim="url_image" type="text" id="file-upload" name="url_image" placeholder="URL image" >
       <button type="submit">Envoyer</button>
     </form>
   </div>
@@ -19,18 +19,16 @@
         <div class="row w3-margin">
           <div class="col-sm-3"><i class='fas fa-user-alt'></i></div>
           <div class="col-sm-6"></div>
-          <div class="col-sm-3">{{ data.date | moment("dddd, MMMM Do YYYY") }}</div>
+          <div class="col-sm-3">{{
+              data.date
+            }}</div>
         </div>
       </header>
 
       <div class="w3-container">
         <p class="w3-margin">{{data.message}}</p>
-        <p><img src="{{data.image}}" alt=""></p>
+        <p><img v-bind:src="data.url_image" alt=""></p>
       </div>
-
-      <footer class="w3-container">
-        <h5>Footer</h5>
-      </footer>
     </div>
   </div>
   </div>
@@ -54,7 +52,7 @@ import {ID_USER_GETTER, IS_USER_AUTHENTICATE_GETTER, POST_MSG_ACTION, PSEUDO_GET
 import {mapActions, mapGetters} from "vuex";
 
 import Homepage from "@/views/Homepage.vue";
-import moment from 'moment';
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Home",
@@ -65,9 +63,8 @@ export default {
   data() {
     return {
       message: '',
-      file: '',
-      date: new Date().toLocaleDateString('en-CA'),
-      video: 'https://www.youtube.com/watch?v=YxZMYcHsoCQ',
+      url_image: '',
+      timestamp: '',
       postData: [],
       pseudo: ''
     }
@@ -80,7 +77,7 @@ export default {
     }),
   },
   created() {
-    this.moment = moment;
+    setInterval(this.getNow, 1000);
   },
   mounted() {
     axios.get(`http://localhost:5000/api/post`, {withCredentials: true})
@@ -94,30 +91,28 @@ export default {
           this.pseudo[] = response.data[0].pseudo;
         });*/
   },
+
   methods: {
+    getNow: function() {
+      const today = new Date();
+      const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      const dateTime = date +' '+ time;
+      this.timestamp = dateTime;
+    },
     ...mapActions('post', {post: POST_MSG_ACTION}),
     async onPost() {
-      // if (this.file) {
-      //   if (!this.file.name.endsWith(".jpg") && !this.file.name.endsWith(".jpeg") && !this.file.name.endsWith(".png")) {
-      //     alert("L'image doit être au format jpg/jpeg/png");
-      //     return;
-      //   }
-      //   if (this.file.size > 1 * 1024 * 1024) {
-      //     alert("L'image ne doit pas dépasser 5 mo");
-      //     return;
-      //   }
-      // }
       try {
         await this.post({
           poster_id: this.idUser,
           message: this.message,
-          video: this.video,
-          date: this.date,
-          file: this.file,
+          timestamp: this.timestamp,
+          url_image: this.url_image
         });
       } catch (e) {
         this.error = e;
       }
+      await this.$router.push('/');
     }
   }
 }
