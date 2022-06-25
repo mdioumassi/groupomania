@@ -8,7 +8,7 @@
       <p>{{ pseudo }}</p></a>
     <form @submit.prevent="onPost()" class="form-post-msg">
       <textarea v-model.trim="message" class="form-control" rows="3" name='message' id='message'
-                placeholder='Quoi de neuf ?'></textarea>
+                placeholder='Quoi de neuf ?' required></textarea>
       <input v-model.trim="url_image" type="text" id="file-upload" name="url_image" placeholder="URL image" >
       <button type="submit">Envoyer</button>
     </form>
@@ -32,7 +32,6 @@
     </div>
   </div>
   </div>
-  <!--  </div>-->
   <div class="row" v-if="!isAuth">
     <div class="col-sm-4"></div>
     <div class="col-sm-4">
@@ -48,7 +47,7 @@
 <script>
 
 import axios from "axios";
-import {ID_USER_GETTER, IS_USER_AUTHENTICATE_GETTER, POST_MSG_ACTION, PSEUDO_GETTER} from "@/store/storeconstants";
+import {ID_USER_GETTER, IS_USER_AUTHENTICATE_GETTER, POST_MSG_ACTION, SET_TOKEN} from "@/store/storeconstants";
 import {mapActions, mapGetters} from "vuex";
 
 import Homepage from "@/views/Homepage.vue";
@@ -72,27 +71,25 @@ export default {
   computed: {
     ...mapGetters('auth', {
       isAuth: IS_USER_AUTHENTICATE_GETTER,
-      pseudo: PSEUDO_GETTER,
+      // pseudo: PSEUDO_GETTER,
       idUser: ID_USER_GETTER,
     }),
   },
   created() {
     setInterval(this.getNow, 1000);
+    this.getToken();
   },
   mounted() {
     axios.get(`http://localhost:5000/api/post`, {withCredentials: true})
         .then((response) => {
          this.postData = response.data;
         });
-
-    /*
-    axios.get(`http://localhost:5000/api/user/${this.idUser}`, {withCredentials: true})
-        .then((response) => {
-          this.pseudo[] = response.data[0].pseudo;
-        });*/
   },
 
   methods: {
+    ...mapActions('auth', {
+      tokenUser: SET_TOKEN
+    }),
     getNow: function() {
       const today = new Date();
       const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -113,8 +110,14 @@ export default {
         this.error = e;
       }
       await this.$router.push('/');
+    },
+    getToken() {
+      axios.get(`http://localhost:5000/api/jwtid`, {withCredentials: true})
+          .then((response) => {
+            this.tokenUser({token: response.data.token, myID: response.data.myID});
+          });
     }
-  }
+  },
 }
 </script>
 

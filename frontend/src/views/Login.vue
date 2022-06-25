@@ -21,14 +21,15 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import SignupValidations from "@/services/SignupValidations";
-import {LOGIN_ACTION, PSEUDO_GETTER} from "@/store/storeconstants";
+import {ID_USER_GETTER, LOGIN_ACTION, SET_TOKEN} from "@/store/storeconstants";
+import axios from "axios";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Login',
   computed: {
     ...mapGetters('auth', {
-      pseudo: PSEUDO_GETTER
+      idUser: ID_USER_GETTER
     }),
   },
   data() {
@@ -36,13 +37,16 @@ export default {
       email: '',
       password: '',
       errors: [],
-      error: ''
+      error: '',
     }
   },
   methods: {
-    ...mapActions('auth', {login: LOGIN_ACTION}),
+    ...mapActions('auth', {
+      login: LOGIN_ACTION,
+      tokenUser: SET_TOKEN
+    }),
     async onLogin() {
-      let validations = new SignupValidations(
+    let validations = new SignupValidations(
           this.email,
           this.password
       );
@@ -50,12 +54,20 @@ export default {
       if ('email' in this.errors || 'password' in this.errors) {
         return false;
       }
+
       try {
          await this.login({email: this.email, password: this.password});
       } catch (e) {
         this.error = e;
       }
-     await this.$router.push('/');
+      this.getToken();
+      await this.$router.push('/');
+    },
+    getToken() {
+      axios.get(`http://localhost:5000/api/jwtid`, {withCredentials: true})
+          .then((response) => {
+            this.tokenUser({token: response.data.token,  myID: response.data.myID});
+          });
     }
   },
 }

@@ -36,7 +36,7 @@ app.get('/api/jwtid', auth, (req, res, next) => {
     const token = req.cookies.jwt;
     const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
     const myID = decodedToken.id;
-    res.status(200).json({myID});
+    res.status(200).json({myID, token});
 });
 
 module.exports = app;

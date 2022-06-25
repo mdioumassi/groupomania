@@ -16,7 +16,7 @@ export default {
         let response = '';
         try {
             response = await axios.post(`http://localhost:5000/api/post`, postData, {withCredentials: true});
-            console.log(response);
+            console.log(response.data);
         } catch (err) {
             throw SignupValidations.getErrorMessageFromCode(err.response.data.message);
         }

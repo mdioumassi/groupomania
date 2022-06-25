@@ -10,7 +10,6 @@ export default {
             token: '',
             pseudo: '',
             email: '',
-            password: '',
         };
     },
     mutations,
